@@ -1,0 +1,5 @@
+{
+  "OpenAiApiKey": "sk-***********************************",
+  "SnapshotInterval": 20000,
+  "ActivitySnapshotThreashold": 3
+}
