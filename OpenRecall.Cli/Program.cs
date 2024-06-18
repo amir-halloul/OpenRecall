@@ -1,4 +1,6 @@
-﻿using OpenRecall.Library;
+﻿using OpenRecall.Cli.Repositories;
+using OpenRecall.Library;
+using OpenRecall.Library.Ai;
 using OpenRecall.Library.Utilities;
 
 namespace OpenRecall.Cli
@@ -11,6 +13,7 @@ namespace OpenRecall.Cli
             var configuration = Configuration.Load();
             var aiUtility = new AiUtility(configuration.OpenAiApiKey);
             var activityManager = new ActivityManager(aiUtility, configuration.SnapshotInterval, configuration.ActivitySnapshotThreashold);
+            var chatBot = new AiChatBot(new ActivityRepository(), configuration.OpenAiApiKey);
 
             activityManager.ActivityCreated += ActivityManager_ActivityCreated;
 
@@ -18,17 +21,23 @@ namespace OpenRecall.Cli
 
             while (true)
             {
+                Console.Write("You: ");
                 var input = Console.ReadLine();
 
-                if (input == "quit")
+                if (input == null)
+                {
+                    continue;
+                }
+
+                if (input.Trim().ToLower() == "quit")
                 {
                     activityManager.Stop();
                     break;
-                }
-
-                if (input == "ping")
+                } else
                 {
-                    Console.WriteLine("Pong");
+                    // Get response from AI asynchronusly on a separate thread
+                    var response = chatBot.GetResponse(input).Result;
+                    Console.WriteLine($"OpenRecall AI: {response}");
                 }
             }
 

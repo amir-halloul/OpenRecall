@@ -94,8 +94,8 @@ public class ActivityManager
 
             if (!cancellationToken.IsCancellationRequested)
             {
-                var description = await _aiUtility.SummarizeActivityAsync(activity);
-                activity.Description = description;
+                activity.Description = await _aiUtility.SummarizeActivityAsync(activity);
+                activity.DescriptionVector = await _aiUtility.VectorizeStringAsync(activity.Description); 
 
                 // Raising the ActivityCreated event
                 ActivityCreated?.Invoke(this, new ActivityEventArgs { Activity = activity });

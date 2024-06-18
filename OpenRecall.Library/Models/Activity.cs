@@ -11,7 +11,13 @@ namespace OpenRecall.Library.Models
         [NotMapped]
         public IList<ActivitySnapshot> Snapshots { get; set; } = new List<ActivitySnapshot>();
         public string Description { get; set; } = string.Empty;
+        public ReadOnlyMemory<float> DescriptionVector { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set;  }
+
+        public override string ToString()
+        {
+            return $"{StartTime.ToString("dddd, dd MMMM yyyy HH:mm:ss")} - {EndTime.ToString("dddd, dd MMMM yyyy HH:mm:ss")}: {Description}";
+        }
     }
 }

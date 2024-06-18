@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OpenRecall.Library.Models;
+using System.Text.Json;
 
 namespace OpenRecall.Cli
 {
@@ -18,5 +19,20 @@ namespace OpenRecall.Cli
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite($"Data Source={DbPath}");
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            var jsonSerliazerOptions = new JsonSerializerOptions
+            {
+                WriteIndented = false,
+            };
+
+            modelBuilder.Entity<Activity>()
+                .Property(a => a.DescriptionVector)
+                .HasConversion(
+                    v => JsonSerializer.Serialize(v, jsonSerliazerOptions),
+                    v => JsonSerializer.Deserialize<ReadOnlyMemory<float>>(v, jsonSerliazerOptions)
+                );
+        }
     }
 }
