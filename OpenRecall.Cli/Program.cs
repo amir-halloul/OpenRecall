@@ -35,7 +35,7 @@ namespace OpenRecall.Cli
                     break;
                 } else
                 {
-                    // Get response from AI asynchronusly on a separate thread
+                    // Get response from AI asynchronously on a separate thread
                     var response = chatBot.GetResponse(input).Result;
                     Console.WriteLine($"OpenRecall AI: {response}");
                 }
